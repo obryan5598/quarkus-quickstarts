@@ -1,6 +1,7 @@
 package org.acme.getting.started;
 
 import javax.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,6 +15,9 @@ public class GreetingResource {
     @Inject
     GreetingService service;
 
+    @ConfigProperty(name = "person.name")
+    String name;
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/greeting/{name}")
@@ -24,6 +28,6 @@ public class GreetingResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String hello() {
-        return "hello"; 
+        return "hello " + name; 
     }
 }
