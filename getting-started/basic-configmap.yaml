@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: basic-configmap
+  namespace: quarkus-rest-on-ocp
+data:
+  person.name: Michael

@@ -1,6 +1,6 @@
 # Quarkus Getting-Started example
 
-## Add the configmap to the cluster
+## Add the configmap to the namespace quarkus-rest-on-ocp
 > oc create -f /your-path/basic-configmap.yaml
 
 ## Building the image & Deploying to Openshift via S2Image
