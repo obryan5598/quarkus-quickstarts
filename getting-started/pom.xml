@@ -35,14 +35,24 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy</artifactId>
     	</dependency>
-      	<dependency>
+	<dependency> 
 	    <groupId>io.quarkus</groupId>
       	    <artifactId>quarkus-openshift</artifactId>
-    	</dependency>
+	</dependency>
     	<dependency>
             <groupId>io.quarkus</groupId>
     	    <artifactId>quarkus-kubernetes-config</artifactId>
-	</dependency>
+    </dependency>
+    <!--     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-kubernetes</artifactId>
+    </dependency> 
+    <dependency>
+    <groupId>io.quarkus</groupId>
+    <artifactId>quarkus-container-image-s2i</artifactId>
+</dependency> -->
+
+<!-- The OpenShift extension is actually a wrapper extension that brings together the kubernetes and container-image-s2i extensions with sensible defaults so that it’s easier for the user to get started with Quarkus on OpenShift -->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
