@@ -1,79 +1,25 @@
-# Getting started with Quarkus
+### Compile binary native executable skipping tests
+> mvn package -Pnative -DskipTests
 
-This is a minimal CRUD service exposing a couple of endpoints over REST.
+### Build image with Buildah using distroless base image
+> buildah build-using-dockerfile -f /<your-path>/quarkus-quickstarts/getting-started/src/main/docker/Dockerfile.native-distroless -t getting-started-native:1.0.0 .
 
-Under the hood, this demo uses:
+### Push image to public Quay repository
+> buildah login -u <your-quay-user> -p <your-quay-pwd> quay.io
+> buildah push <image-id> docker://quay.io/<your-user>/getting-started-native:1.0.0
 
-- RESTEasy to expose the REST endpoints
-- REST-assured and JUnit 5 for endpoint testing
+### Discover you private cluster registry
+> oc registry info
+> $ default-route-openshift-image-registry.<openshift-cluster>.com
 
-## Requirements
+### Copy image from Quay to private Openshift repository
+> skopeo copy --src-creds <your-quay-user>:<your-quay-pwd> --dest-creds kubetcl:$(oc whoami -t) docker://quay.io/<your-user>/getting-started-native:1.0.0 docker://default-route-openshift-image-registry.<openshift-cluster>.com/<ocp-project>/getting-started-native:1.0.0
 
-To compile and run this demo you will need:
+### Enable pulling permissions
+> oc policy add-role-to-user system:image-puller system:serviceaccount:gastarit-quarkus-rest-on-ocp:getting-started-native --namespace=default
 
-- JDK 11+
-- GraalVM
+### Run the application
+> curl -k -v http://<your-openshift-cluster>.<ocp-project>/hello
 
-### Configuring GraalVM and JDK 11+
-
-Make sure that both the `GRAALVM_HOME` and `JAVA_HOME` environment variables have
-been set, and that a JDK 11+ `java` command is on the path.
-
-See the [Building a Native Executable guide](https://quarkus.io/guides/building-native-image-guide)
-for help setting up your environment.
-
-## Building the application
-
-Launch the Maven build on the checked out sources of this demo:
-
-> ./mvnw package
-
-### Live coding with Quarkus
-
-The Maven Quarkus plugin provides a development mode that supports
-live coding. To try this out:
-
-> ./mvnw quarkus:dev
-
-This command will leave Quarkus running in the foreground listening on port 8080.
-
-1. Visit the default endpoint: [http://127.0.0.1:8080](http://127.0.0.1:8080).
-    - Make a simple change to [src/main/resources/META-INF/resources/index.html](src/main/resources/META-INF/resources/index.html) file.
-    - Refresh the browser to see the updated page.
-2. Visit the `/hello` endpoint: [http://127.0.0.1:8080/hello](http://127.0.0.1:8080/hello)
-    - Update the response in [src/main/java/org/acme/quickstart/GreetingResource.java](src/main/java/org/acme/quickstart/GreetingResource.java). Replace `hello` with `hello there` in the `hello()` method.
-    - Refresh the browser. You should now see `hello there`.
-    - Undo the change, so the method returns `hello` again.
-    - Refresh the browser. You should now see `hello`.
-
-### Run Quarkus in JVM mode
-
-When you're done iterating in developer mode, you can run the application as a
-conventional jar file.
-
-First compile it:
-
-> ./mvnw package
-
-Then run it:
-
-> java -jar ./target/quarkus-app/quarkus-run.jar
-
-Have a look at how fast it boots, or measure the total native memory consumption.
-
-### Run Quarkus as a native executable
-
-You can also create a native executable from this application without making any
-source code changes. A native executable removes the dependency on the JVM:
-everything needed to run the application on the target platform is included in
-the executable, allowing the application to run with minimal resource overhead.
-
-Compiling a native executable takes a bit longer, as GraalVM performs additional
-steps to remove unnecessary codepaths. Use the  `native` profile to compile a
-native executable:
-
-> ./mvnw package -Dnative
-
-After getting a cup of coffee, you'll be able to run this executable directly:
-
-> ./target/getting-started-1.0.0-SNAPSHOT-runner
+### More details
+For more details look at the README-original.md file
